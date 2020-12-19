@@ -10,7 +10,7 @@ void main() {
     //home: Pandora(),
     //initialRoute: "/",
     routes: <String, WidgetBuilder>{
-      '/' : (BuildContext context) => new ApiTes(),//LoginPage(),
+      '/' : (BuildContext context) => new HomeScreen(),//LoginPage(),
       '/hal_satu': (BuildContext context) => new Pandora(),
       '/hal_dua': (BuildContext context) => new Pandora2(),
       '/hal_tiga': (BuildContext context) => new PandoraList(),
@@ -76,14 +76,31 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Text(profile.nomor),
                     Row(
-                      
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        FlatButton(
+                          onPressed: () {}, 
+                          child: Text(
+                            "Delete",
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ),
+                        FlatButton(
+                          onPressed: () {}, 
+                          child: Text(
+                            "Edit",
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
             ),
           );
-        }
+        },
+        itemCount: profiles.length,
       ),
     );
   }
