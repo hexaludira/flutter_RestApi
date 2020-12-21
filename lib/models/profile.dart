@@ -2,20 +2,25 @@ import 'dart:convert';
 
 class Profile {
   String id;
-  String nama;
-  String nomor;
+  String date;
+  String detail;
+  String location;
+  String status;
+  String remark;
+  // String nama;
+  // String nomor;
   //int age;
 
-  Profile({this.id, this.nama, this.nomor});
+  Profile({this.id, this.date, this.detail, this.location, this.status, this.remark});
 
   factory Profile.fromJson(Map<String, dynamic> map) {
     return Profile(
-      id:map["id"], nama: map["nama"], nomor: map["nomor"]
+      id:map["id"], date: map["date"], detail: map["detail"], location: map["location"], status: map["status"], remark: map["remark"]
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {"id": id, "nama": nama, "nomor": nomor};
+    return {"id": id, "date": date, "detail": detail, "location": };
   }
 
   @override

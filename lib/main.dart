@@ -7,6 +7,10 @@ import 'package:flutter_1/utils/api.dart';
 void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
+    theme: ThemeData(
+      primaryColor: Colors.grey[600],
+      //brightness: Brightness.dark,
+    ),
     //home: Pandora(),
     //initialRoute: "/",
     routes: <String, WidgetBuilder>{
@@ -35,10 +39,25 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: FutureBuilder(
-        future: apiService.getProfiles(),
-        builder: (BuildContext context, AsyncSnapshot<List<Profile>> snapshot) {
+    return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
+        title: Text(
+          "Flutter API Test",
+          style: TextStyle(color: Colors.white),
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.add),
+            tooltip: 'Tambah Data',
+            onPressed: () {}
+          ),
+        ],
+      ),
+      body: SafeArea(
+        child: FutureBuilder(
+          future: apiService.getProfiles(),
+          builder: (BuildContext context, AsyncSnapshot<List<Profile>> snapshot) {
           if (snapshot.hasError) {
             return Center(
               child: Text("Something wrong with message: ${snapshot.error.toString()}"),
@@ -50,10 +69,12 @@ class _HomeScreenState extends State<HomeScreen> {
             return Center(
               child: CircularProgressIndicator(),
             );
-          }
-        },
+            }
+          },
+        ),
       ),
     );
+   
   }
 
   Widget _buildListView(List<Profile> profiles) {
@@ -170,8 +191,6 @@ class Pandora extends StatelessWidget {
         );
   }
 }
-
-
 
 class PandoraList extends StatelessWidget {
   @override
