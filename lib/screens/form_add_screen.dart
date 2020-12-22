@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_1/models/profile.dart';
 import 'package:flutter_1/utils/api.dart';
+import 'package:intl/intl.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 
@@ -68,15 +70,94 @@ class _FormAddScreenState extends State<FormAddScreen> {
                       String status = _controllerStatus.text.toString();
                       String remark = _controllerRemark.text.toString();
 
-                      Profile profile = Profile()
-                    }
+                      Profile profile = Profile(date: date, detail: detail, location: location, status: status, remark: remark);
+
+                      _apiService.createProfile(profile).then((isSuccess) {
+                        setState (() => _isLoading = false);
+                        if (isSuccess) {
+                          Navigator.pop(_scaffoldState.currentState.context);
+                        } else {
+                          _scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Submit data gagal"),));
+                        }
+                      });
+                    },
+                    child: Text(
+                      "Submit".toUpperCase(),
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    color: Colors.orange[600],
                   ),
                 ),
               ],
             ),
+          ),
+          _isLoading ? Stack(
+            children: <Widget>[
+              Opacity(
+                opacity: 0.3,
+                child: ModalBarrier(
+                  dismissible: false,
+                  color: Colors.grey,
+                ),
+              ),
+              Center(
+                child: CircularProgressIndicator(),
+              ),
+            ],
           )
+          : Container(),
         ],
       ),
+    );
+  }
+
+  //DateTime Field
+  Widget _buildTextFieldDate() {
+    return Padding(
+      padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
+      child: DateTimeField(
+        format: DateFormat('dd-MMM-yyyy'),
+        onShowPicker: (context, currentValue) {
+          return showDatePicker(
+            context: context, 
+            initialDate: DateTime.now(), 
+            firstDate: DateTime(2019), 
+            lastDate: DateTime(2025)
+          );
+        },
+        controller: _controllerDate,
+        decoration: InputDecoration(
+          labelText: "Tanggal",
+          errorText: _isFieldDateValid == null || _isFieldDateValid ? null : "Tanggal diperlukan"
+        ),
+      ),
+    );
+  }
+
+  //Detail Field
+  Widget _buildTextFieldDetail() {
+    return TextField(
+      controller: _controllerDetail,
+      keyboardType: TextInputType.text,
+      decoration: InputDecoration(
+        labelText: "Detail",
+        errorText: _isFieldDetailValid == null || _isFieldDetailValid ? null : "Detail diperlukan",
+      ),
+      onChanged: (value) {
+        bool isFieldValid = value.trim().isNotEmpty;
+        if (isFieldValid != _isFieldDetailValid) {
+          setState(() => _isFieldDetailValid = isFieldValid);
+        }
+      },
+    );
+  }
+
+  //Location Field
+  Widget _buildTextFieldLocation() {
+    return TextField(
+      controller: _controllerLocation,
+      keyboardType: TextInputType.text,
+      decoration: InputDecoration(),
     );
   }
 }

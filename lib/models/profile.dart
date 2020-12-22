@@ -20,12 +20,12 @@ class Profile {
   }
 
   Map<String, dynamic> toJson() {
-    return {"id": id, "date": date, "detail": detail, "location": };
+    return {"id": id, "date": date, "detail": detail, "location": location, "status": status, "remark": remark};
   }
 
   @override
   String toString() {
-    return 'Profile{id: $id, nama: $nama, nomor: $nomor}';
+    return 'Profile{id: $id, nama: $date, detail: $detail, location: $location, status: $status, remark: $remark}';
   }
 }
 
