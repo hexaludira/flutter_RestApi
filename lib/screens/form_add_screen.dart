@@ -206,5 +206,15 @@ class _FormAddScreenState extends State<FormAddScreen> {
     ); 
   }
 
-  //Status
+  //Remark field
+  Widget _buildTextFieldRemark() {
+    return TextField(
+      controller: _controllerRemark,
+      keyboardType: TextInputType.text,
+      decoration: InputDecoration(
+        labelText: "Keterangan",
+        errorText: 
+      ),
+    );
+  }
 }

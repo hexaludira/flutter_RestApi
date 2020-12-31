@@ -91,11 +91,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      profile.nama,
-                      style: Theme.of(context).textTheme.title,
-                    ),
-                    Text(profile.nomor),
+                    // Text(
+                    //   // profile.nama,
+                    //   // style: Theme.of(context).textTheme.title,
+                    // ),
+                    //Text(profile.nomor),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
