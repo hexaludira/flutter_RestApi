@@ -128,7 +128,7 @@ class _FormAddScreenState extends State<FormAddScreen> {
         controller: _controllerDate,
         decoration: InputDecoration(
           labelText: "Tanggal",
-          errorText: _isFieldDateValid == null || _isFieldDateValid ? null : "Tanggal diperlukan"
+          errorText: _isFieldDateValid == null || _isFieldDateValid ? null : "Tanggal harus diisi"
         ),
       ),
     );
@@ -141,7 +141,7 @@ class _FormAddScreenState extends State<FormAddScreen> {
       keyboardType: TextInputType.text,
       decoration: InputDecoration(
         labelText: "Detail",
-        errorText: _isFieldDetailValid == null || _isFieldDetailValid ? null : "Detail diperlukan",
+        errorText: _isFieldDetailValid == null || _isFieldDetailValid ? null : "Detail harus diisi",
       ),
       onChanged: (value) {
         bool isFieldValid = value.trim().isNotEmpty;
@@ -157,7 +157,54 @@ class _FormAddScreenState extends State<FormAddScreen> {
     return TextField(
       controller: _controllerLocation,
       keyboardType: TextInputType.text,
-      decoration: InputDecoration(),
-    );
+      decoration: InputDecoration(
+        labelText: "Lokasi",
+        errorText: _isFieldLocationValid == null || _isFieldLocationValid ? null : "Lokasi harus diisi"
+      ),
+      onChanged: (value) {
+        bool isFieldValid = value.trim().isNotEmpty;
+        if (isFieldValid != _isFieldLocationValid) {
+          setState(() => _isFieldLocationValid = isFieldValid);
+        }
+      },
+    ); 
   }
+
+  //Status Field
+  Widget _buildTextFieldStatus() {
+    //isEmpty: _valPerbaikan == '';
+    return FormField<String>(
+      builder: (FormFieldState<String> state) {
+        return InputDecorator(
+          decoration: InputDecoration(
+            errorText: _isFieldStatusValid == null || _isFieldStatusValid ? null : "Status harus diisi"
+          ),
+          isEmpty: _valPerbaikan == '',
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              hint: Text("Status Perbaikan"),
+              value: _valPerbaikan,
+              isDense: true,
+
+              onChanged: (String newValue) {
+                setState(() {
+                  _valPerbaikan = newValue;
+                  state.didChange(newValue);
+                });
+              },
+
+              items: _listStatus.map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            )
+          ),
+        );
+      }
+    ); 
+  }
+
+  //Status
 }
