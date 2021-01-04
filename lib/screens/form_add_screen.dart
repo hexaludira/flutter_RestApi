@@ -213,8 +213,16 @@ class _FormAddScreenState extends State<FormAddScreen> {
       keyboardType: TextInputType.text,
       decoration: InputDecoration(
         labelText: "Keterangan",
-        errorText: 
+        errorText: _isFieldRemarkValid || _isFieldRemarkValid ? null : "Remark harus diisi"
       ),
+      onChanged: (value) {
+        bool isFieldValid = value.trim().isNotEmpty;
+        if (isFieldValid != _isFieldRemarkValid) {
+          setState(() => _isFieldRemarkValid = isFieldValid);
+        }
+      },
     );
   }
+
+  
 }

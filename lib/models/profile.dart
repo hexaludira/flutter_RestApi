@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 class Profile {
-  String id;
+  int id;
   String date;
   String detail;
   String location;
