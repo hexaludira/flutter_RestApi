@@ -7,13 +7,17 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 
 class FormAddScreen extends StatefulWidget {
+  Profile profile;
+
+  FormAddScreen({this.profile});
+
   @override
   _FormAddScreenState createState() => _FormAddScreenState();
 }
-//Aan cutting C = 10.10.46.118
+
 class _FormAddScreenState extends State<FormAddScreen> {
   var _valPerbaikan;
-  var _listStatus = ["Sedang dikerjakan", "Sudah selesai", "Lapor QIP", "Kirim Vendor"];
+  var _listStatus = ["Sedang dikerjakan", "LP selesai service", "Lapor QIP", "Kirim Vendor", "Sensor datang"];
 
   bool _isLoading = false;
   ApiService _apiService = ApiService();
@@ -28,6 +32,23 @@ class _FormAddScreenState extends State<FormAddScreen> {
   TextEditingController _controllerLocation = TextEditingController();
   TextEditingController _controllerStatus = TextEditingController();
   TextEditingController _controllerRemark = TextEditingController();
+
+  @override
+  void initState() {
+    if(widget.profile != null){
+      _isFieldDateValid = true;
+      _controllerDate.text = widget.profile.date;
+      _isFieldDetailValid = true;
+      _controllerDetail.text = widget.profile.detail;
+      _isFieldLocationValid = true;
+      _controllerLocation.text = widget.profile.location;
+      _isFieldStatusValid = true;
+      _controllerStatus.text = widget.profile.status;
+      _isFieldRemarkValid = true;
+      _controllerRemark.text = widget.profile.remark;
+    }
+    super.initState();
+  }
  
 
   @override
@@ -37,7 +58,7 @@ class _FormAddScreenState extends State<FormAddScreen> {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
         title: Text(
-          "Tambah Data",
+          widget.profile == null ? "Tambah Data" : "Ubah data",
           style: TextStyle(color: Colors.white),
         ),
         leading: null,
@@ -72,17 +93,30 @@ class _FormAddScreenState extends State<FormAddScreen> {
 
                       Profile profile = Profile(date: date, detail: detail, location: location, status: status, remark: remark);
 
-                      _apiService.createProfile(profile).then((isSuccess) {
-                        setState (() => _isLoading = false);
-                        if (isSuccess) {
-                          Navigator.pop(_scaffoldState.currentState.context);
-                        } else {
-                          _scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Submit data gagal"),));
-                        }
-                      });
+                      if (widget.profile == null) {
+                          _apiService.createProfile(profile).then((isSuccess) {
+                          setState (() => _isLoading = false);
+                          if (isSuccess) {
+                            Navigator.pop(_scaffoldState.currentState.context);
+                          } else {
+                            _scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Submit data gagal"),));
+                          }
+                        });
+                      } else {
+                        profile.id = widget.profile.id;
+                        _apiService.createProfile(profile).then((isSuccess) {
+                          setState(() => _isLoading = false);
+                          if (isSuccess) {
+                            Navigator.pop(_scaffoldState.currentState.context);
+                          } else {
+                            _scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Update data gagal"),));
+                          }
+                        });
+                      }
+                      
                     },
                     child: Text(
-                      "Submit".toUpperCase(),
+                      widget.profile == null ? "Submit".toUpperCase() : "Update Data".toUpperCase(),
                       style: TextStyle(color: Colors.white),
                     ),
                     color: Colors.orange[600],
@@ -213,7 +247,7 @@ class _FormAddScreenState extends State<FormAddScreen> {
       keyboardType: TextInputType.text,
       decoration: InputDecoration(
         labelText: "Keterangan",
-        errorText: _isFieldRemarkValid || _isFieldRemarkValid ? null : "Remark harus diisi"
+        errorText: _isFieldRemarkValid == null || _isFieldRemarkValid ? null : "Remark harus diisi"
       ),
       onChanged: (value) {
         bool isFieldValid = value.trim().isNotEmpty;

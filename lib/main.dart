@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_1/models/profile.dart';
+import 'package:flutter_1/screens/form_add_screen.dart';
 import 'package:flutter_1/screens/login_view.dart';
 import 'package:flutter_1/screens/register_view.dart';
 import 'package:flutter_1/utils/api.dart';
@@ -50,7 +51,9 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: const Icon(Icons.add),
             tooltip: 'Tambah Data',
-            onPressed: () {}
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => FormAddScreen()),);
+            }
           ),
         ],
       ),

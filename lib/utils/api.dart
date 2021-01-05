@@ -35,7 +35,7 @@ class ApiService {
   //Mengupdate data pada DB
   Future<bool> updateProfile (Profile data) async {
     final response = await client.put(
-      "$baseUrl/index.php/List_Problem",
+      "$baseUrl/index.php/List_Problem/${data.id}",
       headers: {"content-type" : "application/json"},
       body: profileToJson(data),
     );
@@ -47,6 +47,16 @@ class ApiService {
   }
 
   //Menghapus data pada DB
-  
+  Future<bool> deleteProfile(int id) async {
+    final response = await client.delete(
+      "$baseUrl/index.php/List_Problem/$id",
+      headers: {"content-type" : "application/json"},
+    );
+    if(response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
 }
