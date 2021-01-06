@@ -64,91 +64,193 @@ class _FormAddScreenState extends State<FormAddScreen> {
         leading: null,
         automaticallyImplyLeading: true,
       ),
-      body: Stack(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                _buildTextFieldDate(),
-                _buildTextFieldDetail(),
-                _buildTextFieldLocation(),
-                _buildTextFieldStatus(),
-                _buildTextFieldRemark(),
+
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverList(
+            delegate: SliverChildListDelegate([
+              Stack(children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: RaisedButton(
-                    onPressed: () {
-                      if (_isFieldDateValid == null || _isFieldDetailValid == null || _isFieldLocationValid == null|| _isFieldStatusValid == null || _isFieldRemarkValid == null || !_isFieldDateValid || !_isFieldDetailValid || !_isFieldLocationValid || !_isFieldStatusValid || !_isFieldRemarkValid) {
-                        _scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Tolong isi semua data"),),);
-                        return;
-                      }
-                      setState(() => _isLoading = true);
-                      String date = _controllerDate.text.toString();
-                      String detail = _controllerDetail.text.toString();
-                      String location = _controllerLocation.text.toString();
-                      String status = _controllerStatus.text.toString();
-                      String remark = _controllerRemark.text.toString();
-
-                      Profile profile = Profile(date: date, detail: detail, location: location, status: status, remark: remark);
-
-                      if (widget.profile == null) {
-                          _apiService.createProfile(profile).then((isSuccess) {
-                          setState (() => _isLoading = false);
-                          if (isSuccess) {
-                            Navigator.pop(_scaffoldState.currentState.context);
-                          } else {
-                            _scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Submit data gagal"),));
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    _buildTextFieldDate(),
+                    _buildTextFieldDetail(),
+                    _buildTextFieldLocation(),
+                    _buildTextFieldStatus(),
+                    _buildTextFieldRemark(),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: RaisedButton(
+                        onPressed: () {
+                          if (_isFieldDateValid == null || _isFieldDetailValid == null || _isFieldLocationValid == null|| _isFieldStatusValid == null || _isFieldRemarkValid == null || !_isFieldDateValid || !_isFieldDetailValid || !_isFieldLocationValid || !_isFieldStatusValid || !_isFieldRemarkValid) {
+                            _scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Tolong isi semua data"),),);
+                            return;
                           }
-                        });
-                      } else {
-                        profile.id = widget.profile.id;
-                        _apiService.createProfile(profile).then((isSuccess) {
-                          setState(() => _isLoading = false);
-                          if (isSuccess) {
-                            Navigator.pop(_scaffoldState.currentState.context);
+                          setState(() => _isLoading = true);
+                          String date = _controllerDate.text.toString();
+                          String detail = _controllerDetail.text.toString();
+                          String location = _controllerLocation.text.toString();
+                          String status = _controllerStatus.text.toString();
+                          String remark = _controllerRemark.text.toString();
+
+                          Profile profile = Profile(date: date, detail: detail, location: location, status: status, remark: remark);
+
+                          if (widget.profile == null) {
+                              _apiService.createProfile(profile).then((isSuccess) {
+                              setState (() => _isLoading = false);
+                              if (isSuccess) {
+                                Navigator.pop(_scaffoldState.currentState.context);
+                              } else {
+                                _scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Submit data gagal"),));
+                              }
+                            });
                           } else {
-                            _scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Update data gagal"),));
+                            profile.id = widget.profile.id;
+                            _apiService.createProfile(profile).then((isSuccess) {
+                              setState(() => _isLoading = false);
+                              if (isSuccess) {
+                                Navigator.pop(_scaffoldState.currentState.context);
+                              } else {
+                                _scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Update data gagal"),));
+                              }
+                            });
                           }
-                        });
-                      }
-                      
-                    },
-                    child: Text(
-                      widget.profile == null ? "Submit".toUpperCase() : "Update Data".toUpperCase(),
-                      style: TextStyle(color: Colors.white),
+                          
+                        },
+                        child: Text(
+                          widget.profile == null ? "Submit".toUpperCase() : "Update Data".toUpperCase(),
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        color: Colors.orange[600],
+                      ),
                     ),
-                    color: Colors.orange[600],
+                  ],
                   ),
                 ),
+                _isLoading ? Stack(
+                  children: <Widget>[
+                    Opacity(
+                      opacity: 0.3,
+                      child: ModalBarrier(
+                        dismissible: false,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ],
+                )
+                : Container(),
               ],
-            ),
+              )
+            ])
           ),
-          _isLoading ? Stack(
-            children: <Widget>[
-              Opacity(
-                opacity: 0.3,
-                child: ModalBarrier(
-                  dismissible: false,
-                  color: Colors.grey,
+
+          SliverFillRemaining(
+            hasScrollBody: false,
+              child: Container (
+                alignment: Alignment.bottomCenter,
+                margin: EdgeInsets.only(bottom: 20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  
                 ),
               ),
-              Center(
-                child: CircularProgressIndicator(),
-              ),
-            ],
-          )
-          : Container(),
+          ),
         ],
-      ),
+      )
+      
     );
+      // body: Stack(
+      //   children: <Widget>[
+      //     Padding(
+      //       padding: const EdgeInsets.all(16.0),
+      //       child: Column(
+      //         crossAxisAlignment: CrossAxisAlignment.stretch,
+      //         children: <Widget>[
+      //           _buildTextFieldDate(),
+      //           _buildTextFieldDetail(),
+      //           _buildTextFieldLocation(),
+      //           _buildTextFieldStatus(),
+      //           _buildTextFieldRemark(),
+      //           Padding(
+      //             padding: const EdgeInsets.only(top: 8.0),
+      //             child: RaisedButton(
+      //               onPressed: () {
+      //                 if (_isFieldDateValid == null || _isFieldDetailValid == null || _isFieldLocationValid == null|| _isFieldStatusValid == null || _isFieldRemarkValid == null || !_isFieldDateValid || !_isFieldDetailValid || !_isFieldLocationValid || !_isFieldStatusValid || !_isFieldRemarkValid) {
+      //                   _scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Tolong isi semua data"),),);
+      //                   return;
+      //                 }
+      //                 setState(() => _isLoading = true);
+      //                 String date = _controllerDate.text.toString();
+      //                 String detail = _controllerDetail.text.toString();
+      //                 String location = _controllerLocation.text.toString();
+      //                 String status = _controllerStatus.text.toString();
+      //                 String remark = _controllerRemark.text.toString();
+
+      //                 Profile profile = Profile(date: date, detail: detail, location: location, status: status, remark: remark);
+
+      //                 if (widget.profile == null) {
+      //                     _apiService.createProfile(profile).then((isSuccess) {
+      //                     setState (() => _isLoading = false);
+      //                     if (isSuccess) {
+      //                       Navigator.pop(_scaffoldState.currentState.context);
+      //                     } else {
+      //                       _scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Submit data gagal"),));
+      //                     }
+      //                   });
+      //                 } else {
+      //                   profile.id = widget.profile.id;
+      //                   _apiService.createProfile(profile).then((isSuccess) {
+      //                     setState(() => _isLoading = false);
+      //                     if (isSuccess) {
+      //                       Navigator.pop(_scaffoldState.currentState.context);
+      //                     } else {
+      //                       _scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Update data gagal"),));
+      //                     }
+      //                   });
+      //                 }
+                      
+      //               },
+      //               child: Text(
+      //                 widget.profile == null ? "Submit".toUpperCase() : "Update Data".toUpperCase(),
+      //                 style: TextStyle(color: Colors.white),
+      //               ),
+      //               color: Colors.orange[600],
+      //             ),
+      //           ),
+      //         ],
+      //       ),
+      //     ),
+      //     _isLoading ? Stack(
+      //       children: <Widget>[
+      //         Opacity(
+      //           opacity: 0.3,
+      //           child: ModalBarrier(
+      //             dismissible: false,
+      //             color: Colors.grey,
+      //           ),
+      //         ),
+      //         Center(
+      //           child: CircularProgressIndicator(),
+      //         ),
+      //       ],
+      //     )
+      //     : Container(),
+      //   ],
+      // ),
+
+
+   
   }
 
   //DateTime Field
   Widget _buildTextFieldDate() {
     return Padding(
-      padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
+      padding: EdgeInsets.symmetric(vertical: 12.0),
       child: DateTimeField(
         format: DateFormat('dd-MMM-yyyy'),
         onShowPicker: (context, currentValue) {
@@ -162,28 +264,90 @@ class _FormAddScreenState extends State<FormAddScreen> {
         controller: _controllerDate,
         decoration: InputDecoration(
           labelText: "Tanggal",
+          fillColor: Colors.white,
+          filled: true,
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide(color: Colors.grey),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: Colors.grey),
+          ),
           errorText: _isFieldDateValid == null || _isFieldDateValid ? null : "Tanggal harus diisi"
         ),
+        onChanged: (value) {
+          bool isFieldValid = value.toString().trim().isNotEmpty;
+          if(isFieldValid != _isFieldDateValid) {
+            setState(() => _isFieldDateValid = isFieldValid);
+          }
+        },
       ),
     );
   }
 
   //Detail Field
   Widget _buildTextFieldDetail() {
-    return TextField(
-      controller: _controllerDetail,
-      keyboardType: TextInputType.text,
-      decoration: InputDecoration(
-        labelText: "Detail",
-        errorText: _isFieldDetailValid == null || _isFieldDetailValid ? null : "Detail harus diisi",
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 12.0),
+      child: TextField(
+        controller: _controllerDetail,
+        keyboardType: TextInputType.text,
+        decoration: InputDecoration(
+          labelText: "Detail",
+          fillColor: Colors.white,
+          filled: true,
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide(color: Colors.grey),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: Colors.grey),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide(color: Colors.redAccent),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: Colors.redAccent),
+          ),
+          errorText: _isFieldDetailValid == null || _isFieldDetailValid ? null : "Detail harus diisi",
+        ),
+        onChanged: (value) {
+          bool isFieldValid = value.trim().isNotEmpty;
+          if (isFieldValid != _isFieldDetailValid) {
+            setState(() => _isFieldDetailValid = isFieldValid);
+          }
+        },
       ),
-      onChanged: (value) {
-        bool isFieldValid = value.trim().isNotEmpty;
-        if (isFieldValid != _isFieldDetailValid) {
-          setState(() => _isFieldDetailValid = isFieldValid);
-        }
-      },
     );
+
+    // return TextField(
+    //   controller: _controllerDetail,
+    //   keyboardType: TextInputType.text,
+    //   decoration: InputDecoration(
+    //     labelText: "Detail",
+    //     fillColor: Colors.white,
+    //     filled: true,
+    //     focusedBorder: OutlineInputBorder(
+    //       borderRadius: BorderRadius.circular(25),
+    //       borderSide: BorderSide(color: Colors.grey),
+    //     ),
+    //     enabledBorder: OutlineInputBorder(
+    //       borderRadius: BorderRadius.circular(10),
+    //       borderSide: BorderSide(color: Colors.grey),
+    //     ),
+    //     errorText: _isFieldDetailValid == null || _isFieldDetailValid ? null : "Detail harus diisi",
+    //   ),
+    //   onChanged: (value) {
+    //     bool isFieldValid = value.trim().isNotEmpty;
+    //     if (isFieldValid != _isFieldDetailValid) {
+    //       setState(() => _isFieldDetailValid = isFieldValid);
+    //     }
+    //   },
+    // );
   }
 
   //Location Field
@@ -193,6 +357,16 @@ class _FormAddScreenState extends State<FormAddScreen> {
       keyboardType: TextInputType.text,
       decoration: InputDecoration(
         labelText: "Lokasi",
+        fillColor: Colors.white,
+        filled: true,
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(25),
+          borderSide: BorderSide(color: Colors.grey),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: Colors.grey),
+        ),
         errorText: _isFieldLocationValid == null || _isFieldLocationValid ? null : "Lokasi harus diisi"
       ),
       onChanged: (value) {
@@ -211,6 +385,16 @@ class _FormAddScreenState extends State<FormAddScreen> {
       builder: (FormFieldState<String> state) {
         return InputDecorator(
           decoration: InputDecoration(
+            fillColor: Colors.white,
+            filled: true,
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(25),
+              borderSide: BorderSide(color: Colors.grey),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(25),
+              borderSide: BorderSide(color: Colors.grey),
+            ),
             errorText: _isFieldStatusValid == null || _isFieldStatusValid ? null : "Status harus diisi"
           ),
           isEmpty: _valPerbaikan == '',
@@ -247,6 +431,16 @@ class _FormAddScreenState extends State<FormAddScreen> {
       keyboardType: TextInputType.text,
       decoration: InputDecoration(
         labelText: "Keterangan",
+        fillColor: Colors.white,
+        filled: true,
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(25),
+          borderSide: BorderSide(color: Colors.grey),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: Colors.grey),
+        ),
         errorText: _isFieldRemarkValid == null || _isFieldRemarkValid ? null : "Remark harus diisi"
       ),
       onChanged: (value) {
