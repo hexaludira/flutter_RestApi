@@ -4,7 +4,7 @@ import 'package:http/http.dart' show Client;
 class ApiService {
   
   //final String baseUrl = "http://api.bengkelrobot.net:8001";
-  final String baseUrl = "http://10.10.41.246/rest_ci";
+  final String baseUrl = "http://10.0.2.2/rest_ci";
   Client client = Client();
 
   //Menampilkan data dari DB
@@ -25,7 +25,7 @@ class ApiService {
       headers: {"content-type": "application/json"},
       body: profileToJson(data),
     );
-    if(response.statusCode == 201) {
+    if(response.statusCode == 200) {
       return true;
     } else {
       return false;

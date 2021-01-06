@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_1/main.dart';
 import 'package:flutter_1/models/profile.dart';
 import 'package:flutter_1/utils/api.dart';
 import 'package:intl/intl.dart';
@@ -50,7 +51,7 @@ class _FormAddScreenState extends State<FormAddScreen> {
     super.initState();
   }
  
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,8 +62,13 @@ class _FormAddScreenState extends State<FormAddScreen> {
           widget.profile == null ? "Tambah Data" : "Ubah data",
           style: TextStyle(color: Colors.white),
         ),
-        leading: null,
-        automaticallyImplyLeading: true,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(Icons.arrow_back),
+        )
+        //automaticallyImplyLeading: true,
       ),
 
       body: CustomScrollView(
@@ -92,7 +98,7 @@ class _FormAddScreenState extends State<FormAddScreen> {
                           String date = _controllerDate.text.toString();
                           String detail = _controllerDetail.text.toString();
                           String location = _controllerLocation.text.toString();
-                          String status = _controllerStatus.text.toString();
+                          String status = _valPerbaikan.toString();
                           String remark = _controllerRemark.text.toString();
 
                           Profile profile = Profile(date: date, detail: detail, location: location, status: status, remark: remark);
@@ -101,7 +107,7 @@ class _FormAddScreenState extends State<FormAddScreen> {
                               _apiService.createProfile(profile).then((isSuccess) {
                               setState (() => _isLoading = false);
                               if (isSuccess) {
-                                Navigator.pop(_scaffoldState.currentState.context);
+                                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()), (route) => false);
                               } else {
                                 _scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Submit data gagal"),));
                               }
@@ -129,21 +135,21 @@ class _FormAddScreenState extends State<FormAddScreen> {
                   ],
                   ),
                 ),
-                _isLoading ? Stack(
-                  children: <Widget>[
-                    Opacity(
-                      opacity: 0.3,
-                      child: ModalBarrier(
-                        dismissible: false,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ],
-                )
-                : Container(),
+                // _isLoading ? Stack(
+                //   children: <Widget>[
+                //     Opacity(
+                //       opacity: 0.3,
+                //       child: ModalBarrier(
+                //         dismissible: false,
+                //         color: Colors.grey,
+                //       ),
+                //     ),
+                //     Center(
+                //       child: CircularProgressIndicator(),
+                //     ),
+                //   ],
+                // )
+                // : Container(),
               ],
               )
             ])
@@ -323,133 +329,117 @@ class _FormAddScreenState extends State<FormAddScreen> {
         },
       ),
     );
-
-    // return TextField(
-    //   controller: _controllerDetail,
-    //   keyboardType: TextInputType.text,
-    //   decoration: InputDecoration(
-    //     labelText: "Detail",
-    //     fillColor: Colors.white,
-    //     filled: true,
-    //     focusedBorder: OutlineInputBorder(
-    //       borderRadius: BorderRadius.circular(25),
-    //       borderSide: BorderSide(color: Colors.grey),
-    //     ),
-    //     enabledBorder: OutlineInputBorder(
-    //       borderRadius: BorderRadius.circular(10),
-    //       borderSide: BorderSide(color: Colors.grey),
-    //     ),
-    //     errorText: _isFieldDetailValid == null || _isFieldDetailValid ? null : "Detail harus diisi",
-    //   ),
-    //   onChanged: (value) {
-    //     bool isFieldValid = value.trim().isNotEmpty;
-    //     if (isFieldValid != _isFieldDetailValid) {
-    //       setState(() => _isFieldDetailValid = isFieldValid);
-    //     }
-    //   },
-    // );
   }
 
   //Location Field
   Widget _buildTextFieldLocation() {
-    return TextField(
-      controller: _controllerLocation,
-      keyboardType: TextInputType.text,
-      decoration: InputDecoration(
-        labelText: "Lokasi",
-        fillColor: Colors.white,
-        filled: true,
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(25),
-          borderSide: BorderSide(color: Colors.grey),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 12.0),
+      child: TextField(
+        controller: _controllerLocation,
+        keyboardType: TextInputType.text,
+        decoration: InputDecoration(
+          labelText: "Lokasi",
+          fillColor: Colors.white,
+          filled: true,
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide(color: Colors.grey),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: Colors.grey),
+          ),
+          errorText: _isFieldLocationValid == null || _isFieldLocationValid ? null : "Lokasi harus diisi"
         ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: Colors.grey),
-        ),
-        errorText: _isFieldLocationValid == null || _isFieldLocationValid ? null : "Lokasi harus diisi"
+        onChanged: (value) {
+          bool isFieldValid = value.trim().isNotEmpty;
+          if (isFieldValid != _isFieldLocationValid) {
+            setState(() => _isFieldLocationValid = isFieldValid);
+          }
+        },
       ),
-      onChanged: (value) {
-        bool isFieldValid = value.trim().isNotEmpty;
-        if (isFieldValid != _isFieldLocationValid) {
-          setState(() => _isFieldLocationValid = isFieldValid);
-        }
-      },
     ); 
   }
 
   //Status Field
-  Widget _buildTextFieldStatus() {
-    //isEmpty: _valPerbaikan == '';
-    return FormField<String>(
-      builder: (FormFieldState<String> state) {
-        return InputDecorator(
-          decoration: InputDecoration(
-            fillColor: Colors.white,
-            filled: true,
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(25),
-              borderSide: BorderSide(color: Colors.grey),
+  Widget _buildTextFieldStatus() {  
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 12.0),
+      child: FormField<String>(
+        builder: (FormFieldState<String> state) {
+          return InputDecorator(
+            decoration: InputDecoration(
+              fillColor: Colors.white,
+              filled: true,
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: BorderSide(color: Colors.grey),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(color: Colors.grey),
+              ),
+              errorText: _isFieldStatusValid == null || _isFieldStatusValid ? null : "Status harus diisi"
             ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(25),
-              borderSide: BorderSide(color: Colors.grey),
+            isEmpty: _valPerbaikan == '',
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                hint: Text("Status Perbaikan"),
+                value: _valPerbaikan,
+                isDense: true,
+
+                onChanged: (String newValue) {
+                  setState(() {
+                    _valPerbaikan = newValue;
+                    state.didChange(newValue);
+                    _isFieldStatusValid = true;
+                  });
+                },
+
+                items: _listStatus.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              )
             ),
-            errorText: _isFieldStatusValid == null || _isFieldStatusValid ? null : "Status harus diisi"
-          ),
-          isEmpty: _valPerbaikan == '',
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
-              hint: Text("Status Perbaikan"),
-              value: _valPerbaikan,
-              isDense: true,
-
-              onChanged: (String newValue) {
-                setState(() {
-                  _valPerbaikan = newValue;
-                  state.didChange(newValue);
-                });
-              },
-
-              items: _listStatus.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            )
-          ),
-        );
-      }
-    ); 
+          );
+        }
+      ),
+    );
   }
 
   //Remark field
   Widget _buildTextFieldRemark() {
-    return TextField(
-      controller: _controllerRemark,
-      keyboardType: TextInputType.text,
-      decoration: InputDecoration(
-        labelText: "Keterangan",
-        fillColor: Colors.white,
-        filled: true,
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(25),
-          borderSide: BorderSide(color: Colors.grey),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 12.0),
+      child: TextField(
+        controller: _controllerRemark,
+        keyboardType: TextInputType.text,
+        decoration: InputDecoration(
+          labelText: "Keterangan",
+          fillColor: Colors.white,
+          filled: true,
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide(color: Colors.grey),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: Colors.grey),
+          ),
+          errorText: _isFieldRemarkValid == null || _isFieldRemarkValid ? null : "Remark harus diisi"
         ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: Colors.grey),
-        ),
-        errorText: _isFieldRemarkValid == null || _isFieldRemarkValid ? null : "Remark harus diisi"
+        onChanged: (value) {
+          bool isFieldValid = value.trim().isNotEmpty;
+          if (isFieldValid != _isFieldRemarkValid) {
+            setState(() => _isFieldRemarkValid = isFieldValid);
+          }
+        },
       ),
-      onChanged: (value) {
-        bool isFieldValid = value.trim().isNotEmpty;
-        if (isFieldValid != _isFieldRemarkValid) {
-          setState(() => _isFieldRemarkValid = isFieldValid);
-        }
-      },
-    );
+    ); 
   }
 
   

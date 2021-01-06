@@ -36,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     apiService = ApiService();
+    apiService.getProfiles();
   }
 
   @override
