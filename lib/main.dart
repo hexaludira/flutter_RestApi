@@ -30,6 +30,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  BuildContext context;
   ApiService apiService;
 
   @override
@@ -41,6 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    this.context = context;
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
@@ -107,14 +109,52 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
                         FlatButton(
-                          onPressed: () {}, 
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text("Warning"),
+                                  content: Text("Yakinkah kau menghapus data ${profile.id}?"),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      child: Text("Pastinya"),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        apiService.deleteProfile(profile.id);
+                                        // apiService.deleteProfile(profile.id).then((isSuccess) {
+                                        //   if(isSuccess) {
+                                        //     setState(() {});
+                                            
+                                        //     Scaffold.of(context).showSnackBar(SnackBar(content: Text("Hapus data berhasil")));
+                                        //   } else {
+                                        //     Scaffold.of(context).showSnackBar(SnackBar(content: Text("Yahh.. Hapus data gagal:(")));
+                                        //   }
+                                        // });
+                                      }, 
+                                      
+                                    ),
+                                    FlatButton(
+                                      child: Text("Ga jadi"),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ],
+                                );
+                              }
+                            );
+                          }, 
                           child: Text(
                             "Delete",
                             style: TextStyle(color: Colors.red),
                           ),
                         ),
                         FlatButton(
-                          onPressed: () {}, 
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => FormAddScreen(profile: profile,),));
+                            
+                          }, 
                           child: Text(
                             "Edit",
                             style: TextStyle(color: Colors.blue),

@@ -43,8 +43,8 @@ class _FormAddScreenState extends State<FormAddScreen> {
       _controllerDetail.text = widget.profile.detail;
       _isFieldLocationValid = true;
       _controllerLocation.text = widget.profile.location;
-      _isFieldStatusValid = true;
-      _controllerStatus.text = widget.profile.status;
+      //_isFieldStatusValid = true;
+      //_controllerStatus.text = widget.profile.status;
       _isFieldRemarkValid = true;
       _controllerRemark.text = widget.profile.remark;
     }
@@ -68,7 +68,6 @@ class _FormAddScreenState extends State<FormAddScreen> {
           },
           child: Icon(Icons.arrow_back),
         )
-        //automaticallyImplyLeading: true,
       ),
 
       body: CustomScrollView(
@@ -107,6 +106,7 @@ class _FormAddScreenState extends State<FormAddScreen> {
                               _apiService.createProfile(profile).then((isSuccess) {
                               setState (() => _isLoading = false);
                               if (isSuccess) {
+                                //_scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Data berhasil disimpan"),));
                                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()), (route) => false);
                               } else {
                                 _scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Submit data gagal"),));
@@ -114,10 +114,12 @@ class _FormAddScreenState extends State<FormAddScreen> {
                             });
                           } else {
                             profile.id = widget.profile.id;
-                            _apiService.createProfile(profile).then((isSuccess) {
+                            _apiService.updateProfile(profile).then((isSuccess) {
                               setState(() => _isLoading = false);
                               if (isSuccess) {
-                                Navigator.pop(_scaffoldState.currentState.context);
+                                //_scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Update data berhasil"),));
+                                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()), (route) => false);
+                                //Navigator.pop(_scaffoldState.currentState.context);
                               } else {
                                 _scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Update data gagal"),));
                               }
@@ -170,87 +172,7 @@ class _FormAddScreenState extends State<FormAddScreen> {
       )
       
     );
-      // body: Stack(
-      //   children: <Widget>[
-      //     Padding(
-      //       padding: const EdgeInsets.all(16.0),
-      //       child: Column(
-      //         crossAxisAlignment: CrossAxisAlignment.stretch,
-      //         children: <Widget>[
-      //           _buildTextFieldDate(),
-      //           _buildTextFieldDetail(),
-      //           _buildTextFieldLocation(),
-      //           _buildTextFieldStatus(),
-      //           _buildTextFieldRemark(),
-      //           Padding(
-      //             padding: const EdgeInsets.only(top: 8.0),
-      //             child: RaisedButton(
-      //               onPressed: () {
-      //                 if (_isFieldDateValid == null || _isFieldDetailValid == null || _isFieldLocationValid == null|| _isFieldStatusValid == null || _isFieldRemarkValid == null || !_isFieldDateValid || !_isFieldDetailValid || !_isFieldLocationValid || !_isFieldStatusValid || !_isFieldRemarkValid) {
-      //                   _scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Tolong isi semua data"),),);
-      //                   return;
-      //                 }
-      //                 setState(() => _isLoading = true);
-      //                 String date = _controllerDate.text.toString();
-      //                 String detail = _controllerDetail.text.toString();
-      //                 String location = _controllerLocation.text.toString();
-      //                 String status = _controllerStatus.text.toString();
-      //                 String remark = _controllerRemark.text.toString();
-
-      //                 Profile profile = Profile(date: date, detail: detail, location: location, status: status, remark: remark);
-
-      //                 if (widget.profile == null) {
-      //                     _apiService.createProfile(profile).then((isSuccess) {
-      //                     setState (() => _isLoading = false);
-      //                     if (isSuccess) {
-      //                       Navigator.pop(_scaffoldState.currentState.context);
-      //                     } else {
-      //                       _scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Submit data gagal"),));
-      //                     }
-      //                   });
-      //                 } else {
-      //                   profile.id = widget.profile.id;
-      //                   _apiService.createProfile(profile).then((isSuccess) {
-      //                     setState(() => _isLoading = false);
-      //                     if (isSuccess) {
-      //                       Navigator.pop(_scaffoldState.currentState.context);
-      //                     } else {
-      //                       _scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Update data gagal"),));
-      //                     }
-      //                   });
-      //                 }
-                      
-      //               },
-      //               child: Text(
-      //                 widget.profile == null ? "Submit".toUpperCase() : "Update Data".toUpperCase(),
-      //                 style: TextStyle(color: Colors.white),
-      //               ),
-      //               color: Colors.orange[600],
-      //             ),
-      //           ),
-      //         ],
-      //       ),
-      //     ),
-      //     _isLoading ? Stack(
-      //       children: <Widget>[
-      //         Opacity(
-      //           opacity: 0.3,
-      //           child: ModalBarrier(
-      //             dismissible: false,
-      //             color: Colors.grey,
-      //           ),
-      //         ),
-      //         Center(
-      //           child: CircularProgressIndicator(),
-      //         ),
-      //       ],
-      //     )
-      //     : Container(),
-      //   ],
-      // ),
-
-
-   
+      
   }
 
   //DateTime Field
