@@ -4,8 +4,8 @@ import 'package:http/http.dart' show Client;
 class ApiService {
   
   //final String baseUrl = "http://api.bengkelrobot.net:8001";
-  //final String baseUrl = "http://10.0.2.2/rest_ci";
-  final String baseUrl = "http://10.10.41.246/rest_ci";
+  final String baseUrl = "http://10.0.2.2/rest_ci";
+  //final String baseUrl = "http://10.10.41.246/rest_ci";
   Client client = Client();
 
   //Menampilkan data dari DB
@@ -48,7 +48,7 @@ class ApiService {
   }
 
   //Menghapus data pada DB
-  Future<bool> deleteProfile(int id) async {
+  Future<bool> deleteData (int id) async {
     final response = await client.delete(
       "$baseUrl/index.php/List_Problem/$id",
       headers: {"content-type" : "application/json"},

@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
         title: Text(
-          "Flutter API Test",
+          "List Metal Problem V1.0",
           style: TextStyle(color: Colors.white),
         ),
         actions: <Widget>[
@@ -121,7 +121,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                       child: Text("Pastinya"),
                                       onPressed: () {
                                         Navigator.pop(context);
-                                        apiService.deleteProfile(profile.id);
+                                        //Navigator.push(context, MaterialPageRoute(builder: (context) => FormAddScreen()),);
+                                        apiService.deleteData(profile.id).then((isSuccess) {
+                                          if(isSuccess) {
+                                            setState(() {});
+                                          } else {
+                                            return AlertDialog(title: Text("Gagal"), content: Text("gagal terus"),);  
+                                          }
+
+                                        });
+                                        
+                                        
                                         // apiService.deleteProfile(profile.id).then((isSuccess) {
                                         //   if(isSuccess) {
                                         //     setState(() {});

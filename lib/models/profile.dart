@@ -11,7 +11,7 @@ class Profile {
   // String nomor;
   //int age;
 
-  Profile({this.id, this.date, this.detail, this.location, this.status, this.remark});
+  Profile({this.id = 0, this.date, this.detail, this.location, this.status, this.remark});
 
   factory Profile.fromJson(Map<String, dynamic> map) {
     return Profile(
