@@ -79,6 +79,14 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        backgroundColor: Colors.grey,
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => FormAddScreen()));
+        }
+      ),
     );
    
   }
@@ -106,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Text(profile.status),
                     Text(profile.remark),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         FlatButton(
                           onPressed: () {
