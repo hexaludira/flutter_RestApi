@@ -87,52 +87,58 @@ class _FormAddScreenState extends State<FormAddScreen> {
                     _buildTextFieldRemark(),
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
-                      child: RaisedButton(
-                        onPressed: () {
-                          if (_isFieldDateValid == null || _isFieldDetailValid == null || _isFieldLocationValid == null|| _isFieldStatusValid == null || _isFieldRemarkValid == null || !_isFieldDateValid || !_isFieldDetailValid || !_isFieldLocationValid || !_isFieldStatusValid || !_isFieldRemarkValid) {
-                            _scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Tolong isi semua data"),),);
-                            return;
-                          }
-                          setState(() => _isLoading = true);
-                          String date = _controllerDate.text.toString();
-                          String detail = _controllerDetail.text.toString();
-                          String location = _controllerLocation.text.toString();
-                          String status = _valPerbaikan.toString();
-                          String remark = _controllerRemark.text.toString();
+                      child: ButtonTheme(
+                        minWidth: 100.0,
+                        height: 60.0,
+                        child: RaisedButton(
+                          onPressed: () {
+                            if (_isFieldDateValid == null || _isFieldDetailValid == null || _isFieldLocationValid == null|| _isFieldStatusValid == null || _isFieldRemarkValid == null || !_isFieldDateValid || !_isFieldDetailValid || !_isFieldLocationValid || !_isFieldStatusValid || !_isFieldRemarkValid) {
+                              _scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Tolong isi semua data"),),);
+                              return;
+                            }
+                            setState(() => _isLoading = true);
+                            String date = _controllerDate.text.toString();
+                            String detail = _controllerDetail.text.toString();
+                            String location = _controllerLocation.text.toString();
+                            String status = _valPerbaikan.toString();
+                            String remark = _controllerRemark.text.toString();
 
-                          Profile profile = Profile(date: date, detail: detail, location: location, status: status, remark: remark);
+                            Profile profile = Profile(date: date, detail: detail, location: location, status: status, remark: remark);
 
-                          if (widget.profile == null) {
-                              _apiService.createProfile(profile).then((isSuccess) {
-                              setState (() => _isLoading = false);
-                              if (isSuccess) {
-                                //_scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Data berhasil disimpan"),));
-                                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()), (route) => false);
-                              } else {
-                                _scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Submit data gagal"),));
-                              }
-                            });
-                          } else {
-                            profile.id = widget.profile.id;
-                            _apiService.updateProfile(profile).then((isSuccess) {
-                              setState(() => _isLoading = false);
-                              if (isSuccess) {
-                                //_scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Update data berhasil"),));
-                                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()), (route) => false);
-                                //Navigator.pop(_scaffoldState.currentState.context);
-                              } else {
-                                _scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Update data gagal"),));
-                              }
-                            });
-                          }
+                            if (widget.profile == null) {
+                                _apiService.createProfile(profile).then((isSuccess) {
+                                setState (() => _isLoading = false);
+                                if (isSuccess) {
+                                  //_scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Data berhasil disimpan"),));
+                                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()), (route) => false);
+                                } else {
+                                  _scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Submit data gagal"),));
+                                }
+                              });
+                            } else {
+                              profile.id = widget.profile.id;
+                              _apiService.updateProfile(profile).then((isSuccess) {
+                                setState(() => _isLoading = false);
+                                if (isSuccess) {
+                                  //_scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Update data berhasil"),));
+                                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()), (route) => false);
+                                  //Navigator.pop(_scaffoldState.currentState.context);
+                                } else {
+                                  _scaffoldState.currentState.showSnackBar(SnackBar(content: Text("Update data gagal"),));
+                                }
+                              });
+                            }
+                            
+                          },
+                          child: Text(
+                            widget.profile == null ? "Submit".toUpperCase() : "Update Data".toUpperCase(),
+                            style: TextStyle(color: Colors.white, fontSize: 22.0),
                           
-                        },
-                        child: Text(
-                          widget.profile == null ? "Submit".toUpperCase() : "Update Data".toUpperCase(),
-                          style: TextStyle(color: Colors.white),
+                          ),
+                          color: Colors.grey[600],
                         ),
-                        color: Colors.orange[600],
-                      ),
+                      ), 
+                      
                     ),
                   ],
                   ),

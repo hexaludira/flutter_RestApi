@@ -4,10 +4,12 @@ import 'package:flutter_1/screens/form_add_screen.dart';
 import 'package:flutter_1/screens/login_view.dart';
 import 'package:flutter_1/screens/register_view.dart';
 import 'package:flutter_1/utils/api.dart';
+import 'package:flutter_1/screens/splash_screen.dart';
 
 void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
+    title: 'Metal App V2',
     theme: ThemeData(
       primaryColor: Colors.grey[600],
       //brightness: Brightness.dark,
@@ -15,7 +17,7 @@ void main() {
     //home: Pandora(),
     //initialRoute: "/",
     routes: <String, WidgetBuilder>{
-      '/' : (BuildContext context) => new HomeScreen(),//LoginPage(),
+      '/' : (BuildContext context) => new SplashScreenPage(),//LoginPage(),
       '/hal_satu': (BuildContext context) => new Pandora(),
       '/hal_dua': (BuildContext context) => new Pandora2(),
       '/hal_tiga': (BuildContext context) => new PandoraList(),
@@ -50,15 +52,15 @@ class _HomeScreenState extends State<HomeScreen> {
           "List Metal Problem V1.0",
           style: TextStyle(color: Colors.white),
         ),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.add),
-            tooltip: 'Tambah Data',
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => FormAddScreen()),);
-            }
-          ),
-        ],
+        // actions: <Widget>[
+        //   IconButton(
+        //     icon: const Icon(Icons.add),
+        //     tooltip: 'Tambah Data',
+        //     onPressed: () {
+        //       Navigator.push(context, MaterialPageRoute(builder: (context) => FormAddScreen()),);
+        //     }
+        //   ),
+        // ],
       ),
       body: SafeArea(
         child: FutureBuilder(
@@ -109,10 +111,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         profile.location + " \u25BA " + profile.detail,
                         style: Theme.of(context).textTheme.headline6,
                       ),
-                    Text(profile.detail, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.grey[700]),),
-                    Text(profile.date),
-                    Text(profile.status),
-                    Text(profile.remark),
+                    //Text(profile.detail, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.grey[700]),),
+                    Text(profile.date, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.grey[700]),),
+                    Text('Status: ' + profile.status),
+                    Text('Ket: ' + profile.remark),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[

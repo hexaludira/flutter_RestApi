@@ -6,6 +6,7 @@ class ApiService {
   //final String baseUrl = "http://api.bengkelrobot.net:8001";
   final String baseUrl = "http://10.0.2.2/rest_ci";
   //final String baseUrl = "http://10.10.41.246/rest_ci";
+  //final String baseUrl = "http://192.168.1.14/rest_ci";
   Client client = Client();
 
   //Menampilkan data dari DB
