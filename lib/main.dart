@@ -127,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 builder: (context) {
                                   return AlertDialog(
                                     title: Text("Warning"),
-                                    content: Text("Yakinkah kau menghapus data ${profile.id}?"),
+                                    content: Text("Yakinkah kau menghapus data ${profile.location} \u25BA ${profile.detail}?"),
                                     actions: <Widget>[
                                       FlatButton(
                                         child: Text("Pastinya"),
