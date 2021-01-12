@@ -9,7 +9,7 @@ import 'package:flutter_1/screens/splash_screen.dart';
 void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    title: 'Metal App V2',
+    title: 'Metal App',
     theme: ThemeData(
       primaryColor: Colors.grey[600],
       //brightness: Brightness.dark,
@@ -49,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
         title: Text(
-          "List Metal Problem V1.0",
+          "Metal Problem",
           style: TextStyle(color: Colors.white),
         ),
         // actions: <Widget>[

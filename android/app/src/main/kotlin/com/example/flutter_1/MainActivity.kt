@@ -1,4 +1,4 @@
-package com.example.flutter_1
+package com.hexaludira.metal.app
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
