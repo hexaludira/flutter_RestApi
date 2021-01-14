@@ -32,8 +32,28 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final TextEditingController _filter = TextEditingController();
+  Icon _searchIcon = Icon(Icons.search);
+  String _searchText = "";
+  Widget _appBarTitle = Text("Metal Problem", style: TextStyle(color: Colors.white),);
+  List metalList = List();
+  List filteredData = List();
+  
   BuildContext context;
   ApiService apiService;
+
+  _HomeScreenState() {
+    if(_filter.text.isEmpty){
+      setState(() {
+        _searchText = "";
+        apiService.getProfiles();
+      });
+    } else {
+      setState(() {
+        _searchText = _filter.text;
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -48,19 +68,17 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
-        title: Text(
-          "Metal Problem",
-          style: TextStyle(color: Colors.white),
-        ),
-        // actions: <Widget>[
-        //   IconButton(
-        //     icon: const Icon(Icons.add),
-        //     tooltip: 'Tambah Data',
-        //     onPressed: () {
-        //       Navigator.push(context, MaterialPageRoute(builder: (context) => FormAddScreen()),);
-        //     }
-        //   ),
-        // ],
+        title: _appBarTitle,
+        actions: <Widget>[
+          IconButton(
+            icon: _searchIcon,
+            tooltip: 'Cari Data',
+            onPressed: () {
+              //Navigator.push(context, MaterialPageRoute(builder: (context) => FormAddScreen()),);
+              _cariData();
+            }
+          ),
+        ],
       ),
       body: SafeArea(
         child: FutureBuilder(
@@ -101,7 +119,10 @@ class _HomeScreenState extends State<HomeScreen> {
         child: ListView.builder(
           itemBuilder: (context, index) {
             Profile profile = profiles[index];
-            return Padding(
+            if (_searchText.isNotEmpty){
+              for (int i = 0; i < profiles.length; i++) {
+                if(profile.location.toLowerCase().contains(_searchText.toLowerCase())){
+                    return Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Card(
                 child: Padding(
@@ -189,6 +210,99 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             );
+                }
+              }
+              
+            } else {
+              return Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                            profile.location + " \u25BA " + profile.detail,
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                        //Text(profile.detail, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.grey[700]),),
+                        Text(profile.date, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.grey[700]),),
+                        Text('Status: ' + profile.status),
+                        Text('Ket: ' + profile.remark),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            FlatButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: Text("Warning"),
+                                      content: Text("Yakinkah kau menghapus data ${profile.id}?"),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          child: Text("Pastinya"),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                            //Navigator.push(context, MaterialPageRoute(builder: (context) => FormAddScreen()),);
+                                            apiService.deleteData(profile.id).then((isSuccess) {
+                                              if(isSuccess) {
+                                                setState(() {});
+                                              } else {
+                                                return AlertDialog(title: Text("Gagal"), content: Text("gagal terus"),);  
+                                              }
+
+                                            });
+                                            
+                                            
+                                            // apiService.deleteProfile(profile.id).then((isSuccess) {
+                                            //   if(isSuccess) {
+                                            //     setState(() {});
+                                                
+                                            //     Scaffold.of(context).showSnackBar(SnackBar(content: Text("Hapus data berhasil")));
+                                            //   } else {
+                                            //     Scaffold.of(context).showSnackBar(SnackBar(content: Text("Yahh.. Hapus data gagal:(")));
+                                            //   }
+                                            // });
+                                          }, 
+                                          
+                                        ),
+                                        FlatButton(
+                                          child: Text("Ga jadi"),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  }
+                                );
+                              }, 
+                              child: Text(
+                                "Delete",
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ),
+                            FlatButton(
+                              onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => FormAddScreen(profile: profile,),));
+                                
+                              }, 
+                              child: Text(
+                                "Edit",
+                                style: TextStyle(color: Colors.blue),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }
           },
           itemCount: profiles.length,
         ),
@@ -202,18 +316,31 @@ class _HomeScreenState extends State<HomeScreen> {
     apiService.getProfiles();
     setState(() {});
   }
+
+  void _cariData() {
+    setState(() {
+      if (this._searchIcon.icon == Icons.search){
+        this._searchIcon = Icon(Icons.close);
+        this._appBarTitle = new TextField(
+          controller: _filter,
+          style: TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            prefixIcon: Icon(Icons.search),
+            hintText: 'Cari',
+            //hintStyle: TextStyle(color: Colors.white),
+          ),
+        );
+      } else {
+        this._searchIcon = Icon(Icons.search);
+        this._appBarTitle = Text("Metal Problem", style: TextStyle(color: Colors.white),);
+        filteredData = metalList;
+        _filter.clear();
+      }
+    });
+  }
   
 }
 
-// class ApiTes extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     ApiService().getProfiles().then((value) => print("value: $value"));
-//     return Container(
-      
-//     );
-//   }
-// }
 
  
 class Pandora2 extends StatelessWidget {
