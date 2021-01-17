@@ -43,14 +43,30 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Profile> profiles = List();
   List<Profile> filteredProfiles = List();
   Profile profile = Profile();
-  bool cari_aktif;
+  String _searchText = "";
+
+  // _HomeScreenState(){
+  //   _filter.addListener(() { 
+  //     if(_filter.text.isEmpty){
+  //       _searchText = "";
+  //       filteredProfiles = profiles;
+  //     } else {
+  //       setState(() {
+  //         profiles = filteredProfiles;
+  //         _searchText = _filter.text;
+  //       });
+  //     }
+  //   });
+  // }
   
+
 
   @override
   void initState() {
     super.initState();
     apiService = ApiService();
     apiService.getProfiles();
+    
   }
 
   @override
@@ -78,25 +94,54 @@ class _HomeScreenState extends State<HomeScreen> {
           future: apiService.getProfiles(),
           builder: (BuildContext context, AsyncSnapshot<List<Profile>> snapshot) {
           if (snapshot.hasError) {
+            
             return Center(
               child: Text("Something wrong with message: ${snapshot.error.toString()}"),
             );
           } else if (snapshot.connectionState == ConnectionState.done) {
-
-            List<Profile> profiles = snapshot.data;
-            return FloatingSearchAppBar(
-              title: Text('Metal Problem', style: TextStyle(color: Colors.white),),
-              iconColor: Colors.white,
-              transitionDuration: const Duration(milliseconds: 800),
-              colorOnScroll: Colors.grey[600],
-              liftOnScrollElevation: 10.0,
-              color: Colors.grey[600],
-              hint: 'Cari...',
-              hintStyle: TextStyle(color: Colors.white54),
-              onQueryChanged: (query) => onSearch(query, profiles),
-            
+            if(filteredProfiles.isEmpty){
               
-            );
+               //List<Profile> profiles = snapshot.data;
+               profiles = snapshot.data;
+               print (profiles[0]);
+               return FloatingSearchAppBar(
+                  title: Text('Metal Problem', style: TextStyle(color: Colors.white),),
+                  iconColor: Colors.white,
+                  transitionDuration: const Duration(milliseconds: 800),
+                  colorOnScroll: Colors.grey[600],
+                  liftOnScrollElevation: 10.0,
+                  color: Colors.grey[600],
+                  hint: 'Cari...',
+                  hintStyle: TextStyle(color: Colors.white54),
+                  onQueryChanged: (_filter) => onSearch(_filter, profiles),
+                  
+                  body: _buildListView(profiles),
+              
+              );
+            }
+            else {
+                profiles = filteredProfiles;
+               print (profiles[0]);
+               return FloatingSearchAppBar(
+                  title: Text('Metal Problem', style: TextStyle(color: Colors.white),),
+                  iconColor: Colors.white,
+                  transitionDuration: const Duration(milliseconds: 800),
+                  colorOnScroll: Colors.grey[600],
+                  liftOnScrollElevation: 10.0,
+                  color: Colors.grey[600],
+                  hint: 'Cari...',
+                  hintStyle: TextStyle(color: Colors.white54),
+                  onQueryChanged: (_filter) => onSearch(_filter, profiles),
+                  
+                  body: _buildListView(profiles),
+              
+              );
+              
+              //print(filteredProfiles[0]);
+              //List<Profile> profiles = snapshot.data;
+               
+            }
+            
           } else {
             return Center(
               child: CircularProgressIndicator(),
@@ -214,7 +259,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             );
           },
-          itemCount: profiles.length,
+          itemCount: filteredProfiles.isEmpty ? profiles.length : filteredProfiles.length,
         ),
       ),
       );
@@ -222,122 +267,46 @@ class _HomeScreenState extends State<HomeScreen> {
      
   }
 
-  Widget onSearch(String textFilter, List<Profile> listCari) {
-    List<Profile> tempList = List();
-    if(textFilter.isEmpty){
-      setState(() {     
-      });
-    } else {
-      listCari.forEach((element) { 
-        if (element.location.toLowerCase().contains(textFilter)){
-          //print(element);
-           tempList.add(element);
-        }
-      });
+  List<Profile> onSearch(String textFilter, List<Profile> listCari) {
+    setState(() {
+        if (!(textFilter.isEmpty)){
+        List<Profile> tempList = List();
+        listCari.forEach((element) { 
+          if (element.location.toLowerCase().contains(textFilter)){
+            //print(element);
+            tempList.add(element);
+          }
+        });
         filteredProfiles = tempList;
-      
-      //profiles = tempList;
-      // profiles.forEach((element) {
+      }
+   
+      // filteredProfiles.forEach((element) {
       //   print(element);
       // });
-      //return profiles;
-    }
+      
+    });
 
-    return ListView.builder(
-          itemBuilder: (context, index) {
-            Profile profile = filteredProfiles[index];
-            return Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Card(
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                          profile.location + " \u25BA " + profile.detail,
-                          style: Theme.of(context).textTheme.headline6,
-                        ),
-                      //Text(profile.detail, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.grey[700]),),
-                      Text(profile.date, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.grey[700]),),
-                      Text('Status: ' + profile.status),
-                      Text('Ket: ' + profile.remark),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          FlatButton(
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Text("Warning"),
-                                    content: Text("Yakinkah kau menghapus data ${profile.id}?"),
-                                    actions: <Widget>[
-                                      FlatButton(
-                                        child: Text("Pastinya"),
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                          //Navigator.push(context, MaterialPageRoute(builder: (context) => FormAddScreen()),);
-                                          apiService.deleteData(profile.id).then((isSuccess) {
-                                            if(isSuccess) {
-                                              setState(() {});
-                                            } else {
-                                              return AlertDialog(title: Text("Gagal"), content: Text("gagal terus"),);  
-                                            }
+          // return 
+          //   FloatingSearchAppBar(
+          //     title: Text('Metal Problem', style: TextStyle(color: Colors.white),),
+          //     iconColor: Colors.white,
+          //     transitionDuration: const Duration(milliseconds: 800),
+          //     colorOnScroll: Colors.grey[600],
+          //     liftOnScrollElevation: 10.0,
+          //     color: Colors.grey[600],
+          //     hint: 'Cari...',
+          //     hintStyle: TextStyle(color: Colors.white54),
+          //     onQueryChanged: (query) => onSearch(query, profiles),
+          //     //automaticallyImplyDrawerHamburger: true,
+          //     debounceDelay: Duration(milliseconds: 800),
+              
+          //     body: _buildListView(filteredProfiles),
+              
+              
+          //   );
 
-                                          });
-                                          
-                                          
-                                          // apiService.deleteProfile(profile.id).then((isSuccess) {
-                                          //   if(isSuccess) {
-                                          //     setState(() {});
-                                              
-                                          //     Scaffold.of(context).showSnackBar(SnackBar(content: Text("Hapus data berhasil")));
-                                          //   } else {
-                                          //     Scaffold.of(context).showSnackBar(SnackBar(content: Text("Yahh.. Hapus data gagal:(")));
-                                          //   }
-                                          // });
-                                        }, 
-                                        
-                                      ),
-                                      FlatButton(
-                                        child: Text("Ga jadi"),
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                }
-                              );
-                            }, 
-                            child: Text(
-                              "Delete",
-                              style: TextStyle(color: Colors.red),
-                            ),
-                          ),
-                          FlatButton(
-                            onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => FormAddScreen(profile: profile,),));
-                              
-                            }, 
-                            child: Text(
-                              "Edit",
-                              style: TextStyle(color: Colors.blue),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-          itemCount: profiles.length,
-        );
-
+    return filteredProfiles;
+         
   }
   
   Future refreshData() async{
