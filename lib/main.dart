@@ -45,20 +45,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Profile profile = Profile();
   String _searchText = "";
 
-  // _HomeScreenState(){
-  //   _filter.addListener(() { 
-  //     if(_filter.text.isEmpty){
-  //       _searchText = "";
-  //       filteredProfiles = profiles;
-  //     } else {
-  //       setState(() {
-  //         profiles = filteredProfiles;
-  //         _searchText = _filter.text;
-  //       });
-  //     }
-  //   });
-  // }
-  
 
 
   @override
