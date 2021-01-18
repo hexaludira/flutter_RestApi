@@ -18,7 +18,7 @@ class FormAddScreen extends StatefulWidget {
 
 class _FormAddScreenState extends State<FormAddScreen> {
   var _valPerbaikan;
-  var _listStatus = ["Sedang dikerjakan", "LP selesai service", "Lapor QIP", "Kirim Vendor", "Sensor datang"];
+  var _listStatus = ["LP selesai service", "Lapor QIP", "Kirim Vendor", "Sensor datang", "Lapor ADM IT"];
 
   bool _isLoading = false;
   ApiService _apiService = ApiService();
@@ -33,6 +33,8 @@ class _FormAddScreenState extends State<FormAddScreen> {
   TextEditingController _controllerLocation = TextEditingController();
   TextEditingController _controllerStatus = TextEditingController();
   TextEditingController _controllerRemark = TextEditingController();
+
+  final FocusNode _remarkFocus = FocusNode();
 
   @override
   void initState() {
@@ -186,7 +188,7 @@ class _FormAddScreenState extends State<FormAddScreen> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 12.0),
       child: DateTimeField(
-        format: DateFormat('dd-MMM-yyyy'),
+        format: DateFormat('dd MMMM yyyy'),
         onShowPicker: (context, currentValue) {
           return showDatePicker(
             context: context, 
@@ -345,6 +347,7 @@ class _FormAddScreenState extends State<FormAddScreen> {
       padding: EdgeInsets.symmetric(vertical: 12.0),
       child: TextField(
         controller: _controllerRemark,
+        focusNode: _remarkFocus,
         keyboardType: TextInputType.text,
         decoration: InputDecoration(
           labelText: "Keterangan",

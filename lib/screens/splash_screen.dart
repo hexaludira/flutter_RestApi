@@ -29,8 +29,8 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
       body: Center(
         child: Image.asset(
           "assets/images/metal_simple.png",
-          width: 250.0,
-          height: 150.0,
+          width: 200.0,
+          height: 100.0,
         ),
       ),
 

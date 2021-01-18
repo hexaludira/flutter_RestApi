@@ -125,13 +125,14 @@ class _HomeScreenState extends State<HomeScreen> {
     if(_searchText.isNotEmpty){
         List<Profile> tempList = List();
           profiles.forEach((element) {
-        if(element.location.toLowerCase().contains(_searchText.toLowerCase())){
+        if(element.location.toLowerCase().contains(_searchText.toLowerCase()) || element.detail.toLowerCase().contains(_searchText.toLowerCase()) || element.date.toLowerCase().contains(_searchText.toLowerCase())){
           tempList.add(element);
         }
         
       });
       filteredData = tempList;
     }
+    
     return RefreshIndicator(
       onRefresh: refreshData, 
       child: Padding(
@@ -139,6 +140,9 @@ class _HomeScreenState extends State<HomeScreen> {
         child: ListView.builder(
           itemBuilder: (context, index) {
             Profile profile = filteredData[index];
+            // if () {
+              
+            // }
            
             return Padding(
                 padding: const EdgeInsets.only(top: 8.0),
@@ -249,6 +253,7 @@ class _HomeScreenState extends State<HomeScreen> {
         this._searchIcon = Icon(Icons.close);
         this._appBarTitle = new TextField(
           controller: _filter,
+          autofocus: true,
           style: TextStyle(color: Colors.white),
           decoration: InputDecoration(
             prefixIcon: Icon(Icons.search, color: Colors.white,),
