@@ -251,9 +251,9 @@ class _HomeScreenState extends State<HomeScreen> {
           controller: _filter,
           style: TextStyle(color: Colors.white),
           decoration: InputDecoration(
-            prefixIcon: Icon(Icons.search),
-            hintText: 'Cari',
-            //hintStyle: TextStyle(color: Colors.white),
+            prefixIcon: Icon(Icons.search, color: Colors.white,),
+            hintText: 'Cari...',
+            hintStyle: TextStyle(color: Colors.white),
           ),
         );
       } else {
