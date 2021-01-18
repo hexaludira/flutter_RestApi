@@ -99,18 +99,6 @@ class _HomeScreenState extends State<HomeScreen> {
    
   }
 
-  // void _getDataMetal() async{
-  //   final response = await apiService.getProfiles();
-  //   List<Profile> profiles = List();
-  //   AsyncSnapshot<List<Profile>> snapshot;
-
-  //   profiles = snapshot.data;
-
-  //   setState(() {
-  //     metalList = profiles;
-  //     filteredData = metalList;
-  //   });
-  // }
 
   Widget _futureBuilder(){
     return FutureBuilder(
@@ -134,22 +122,22 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildListView(List<Profile> profiles) {
+    if(_searchText.isNotEmpty){
+        List<Profile> tempList = List();
+          profiles.forEach((element) {
+        if(element.location.toLowerCase().contains(_searchText.toLowerCase())){
+          tempList.add(element);
+        }
+        
+      });
+      filteredData = tempList;
+    }
     return RefreshIndicator(
       onRefresh: refreshData, 
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         child: ListView.builder(
           itemBuilder: (context, index) {
-           
-            if(_searchText.isNotEmpty){
-              List<Profile> tempList = List();
-               profiles.forEach((element) {
-              if(element.location.toLowerCase().contains(_searchText.toLowerCase())){
-                tempList.add(element);
-              }
-              filteredData = tempList;
-            });
-            }
             Profile profile = filteredData[index];
            
             return Padding(
@@ -241,7 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
             },
-          itemCount: metalList == null ? 0 : filteredData.length,
+          itemCount: filteredData.length,
         ),
       ),
                       
