@@ -122,8 +122,8 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           } else if (snapshot.connectionState == ConnectionState.done) {
             //List<Profile> profiles = snapshot.data;
-            metalList = snapshot.data;
-            return _buildListView(metalList);
+            filteredData = snapshot.data;
+            return _buildListView(filteredData);
           } else {
             return Center(
               child: CircularProgressIndicator(),
@@ -241,7 +241,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
             },
-          itemCount: _searchText.isEmpty ? metalList.length : filteredData.length,
+          itemCount: metalList == null ? 0 : filteredData.length,
         ),
       ),
                       
